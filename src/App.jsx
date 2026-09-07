@@ -3,6 +3,7 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import './data/produtos.js'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -16,9 +17,9 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
+          <h1>Loja Virtual</h1>
           <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            É aqui onde as coisas acontecem <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
         </div>
         <button
@@ -26,7 +27,7 @@ function App() {
           className="counter"
           onClick={() => setCount((count) => count + 1)}
         >
-          Count is {count}
+          Account {count}
         </button>
       </section>
 
@@ -37,7 +38,7 @@ function App() {
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
-          <h2>Documentation</h2>
+          <h2>Card Imagens</h2>
           <p>Your questions, answered</p>
           <ul>
             <li>
@@ -58,7 +59,7 @@ function App() {
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#social-icon"></use>
           </svg>
-          <h2>Connect with us</h2>
+          <h2>Card Cadastros</h2>
           <p>Join the Vite community</p>
           <ul>
             <li>
