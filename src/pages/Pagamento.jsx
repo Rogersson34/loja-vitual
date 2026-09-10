@@ -10,10 +10,12 @@ function Pagamento() {
 
     const navigate = useNavigate()
 
-    const { processarPagamento } = usePagamento()
+    const { processarPagamento,
+        carregando
+    } = usePagamento()
 
     const total = location.state?.total || 0
-    function finalizarPagamento(event) {
+    async function finalizarPagamento(event) {
 
         event.preventDefault()
 
@@ -22,7 +24,7 @@ function Pagamento() {
             return
         }
 
-        const pagamentoAprovado = processarPagamento()
+        const pagamentoAprovado = await processarPagamento()
 
         if (pagamentoAprovado) {
             navigate('/sucesso', {
@@ -104,13 +106,22 @@ function Pagamento() {
                 <br />
                 <br />
 
-                <button type="submit">
-                    Finalizar Pagamento
+                <button
+                    type="submit"
+                    disabled={carregando}
+                >
+                    {carregando
+                        ? 'Processando pagamento...'
+                        : 'Finalizar Pagamento'
+
+                    }
+
                 </button>
 
             </form>
 
         </div>
+
     )
 }
 
