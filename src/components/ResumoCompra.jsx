@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom'
 function ResumoCompra({ itens }) {
+
+    const navigate = useNavigate()
 
     const quantidadeTotal = itens.reduce(
         (total, item) => total + item.quantidade,
@@ -12,6 +15,13 @@ function ResumoCompra({ itens }) {
         0
     )
 
+    function irParaPagamento() {
+        navigate('/pagamento', {
+            state: {
+                total: valorTotal
+            }
+        })
+    }
 
     return (
         <div className="resumo-compra">
@@ -27,6 +37,8 @@ function ResumoCompra({ itens }) {
                 Total:
                 <strong> R$ {valorTotal.toFixed(2)}</strong>
             </p>
+
+            <button onClick={irParaPagamento}>Finalizar compra</button>
 
         </div>
     )
