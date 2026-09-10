@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import usePagamento from '../hooks/usePagamento.js'
 
 function Pagamento() {
 
@@ -8,6 +9,8 @@ function Pagamento() {
     const location = useLocation()
 
     const navigate = useNavigate()
+
+    const { processarPagamento } = usePagamento()
 
     const total = location.state?.total || 0
     function finalizarPagamento(event) {
@@ -19,7 +22,7 @@ function Pagamento() {
             return
         }
 
-        const pagamentoAprovado = Math.random() > 0.3
+        const pagamentoAprovado = processarPagamento()
 
         if (pagamentoAprovado) {
             navigate('/sucesso', {
