@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
-function Pagamento({ total }) {
+function Pagamento() {
 
     const [formaPagamento, setFormaPagamento] = useState('')
 
+    const location = useLocation()
+
+    const total = location.state?.total || 0
     function finalizarPagamento(event) {
 
         event.preventDefault()

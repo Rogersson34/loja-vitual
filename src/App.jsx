@@ -1,28 +1,22 @@
 
 import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Carrinho from './pages/Carrinho.jsx'
+import Pagamento from './pages/Pagamento.jsx'
 import produtosIniciais from './data/produtos.js'
 import './App.css'
 
 function App() {
-
-    // Lista de produtos da loja
     const [listaProdutos] = useState(produtosIniciais)
 
-    // Produtos que estão dentro do carrinho
     const [carrinho, setCarrinho] = useState([])
 
-
-    // Adiciona um produto ao carrinho
     function adicionarAoCarrinho(produto) {
 
-        // Verifica se o produto já está no carrinho
         const produtoJaExiste = carrinho.find(
             item => item.id === produto.id
         )
 
-
-        // Se o produto já existe, aumenta a quantidade
         if (produtoJaExiste) {
 
             const novoCarrinho = carrinho.map(item => {
@@ -44,8 +38,6 @@ function App() {
 
         } else {
 
-            // Se o produto ainda não existe,
-            // adicionamos ele com quantidade 1
             const novoProduto = {
                 ...produto,
                 quantidade: 1
@@ -57,12 +49,8 @@ function App() {
         alert(`Produto ${produto.nome} adicionado ao carrinho!`)
     }
 
-
-    // Atualiza a quantidade de um produto
     function atualizarQuantidade(id, novaQuantidade) {
 
-        // Se a quantidade chegar a zero,
-        // removemos o produto
         if (novaQuantidade <= 0) {
             removerDoCarrinho(id)
             return
@@ -87,8 +75,6 @@ function App() {
         setCarrinho(novoCarrinho)
     }
 
-
-    // Remove um produto do carrinho
     function removerDoCarrinho(id) {
 
         const novoCarrinho = carrinho.filter(
@@ -98,8 +84,6 @@ function App() {
         setCarrinho(novoCarrinho)
     }
 
-
-    // Soma a quantidade total de produtos
     const quantidadeTotal = carrinho.reduce(
         (total, item) => total + item.quantidade,
         0
@@ -107,71 +91,78 @@ function App() {
 
 
     return (
-        <div className="container">
 
-            <h1>Loja Virtual</h1>
+        <Routes>
 
-            <p>
-                Itens no carrinho: <strong>{quantidadeTotal}</strong>
-            </p>
+            <Route
+                path="/"
+                element={
 
+                    < div className="container" >
 
-            {/* 
-                Enviamos o carrinho e as funções
-                para o componente Carrinho
-            */}
-            <Carrinho
-                itens={carrinho}
-                onRemover={removerDoCarrinho}
-                onAtualizarQuantidade={atualizarQuantidade}
-            />
+                        <h1>Loja Virtual</h1>
 
-
-            <div className="produtos-grid">
-
-                {listaProdutos.map((produto) => (
-
-                    <div
-                        key={produto.id}
-                        className="produto-card"
-                    >
-
-                        {produto.imagem && (
-                            <img
-                                src={produto.imagem}
-                                alt={produto.nome}
-                            />
-                        )}
-
-
-                        <h2>{produto.nome}</h2>
-
-
-                        <p className="preco">
-                            R$ {produto.preco.toFixed(2)}
+                        <p>
+                            Itens no carrinho: <strong>{quantidadeTotal}</strong>
                         </p>
 
+                        <Carrinho
+                            itens={carrinho}
+                            onRemover={removerDoCarrinho}
+                            onAtualizarQuantidade={atualizarQuantidade}
+                        />
 
-                        {produto.descricao && (
-                            <p>{produto.descricao}</p>
-                        )}
+
+                        <div className="produtos-grid">
+
+                            {listaProdutos.map((produto) => (
+
+                                <div
+                                    key={produto.id}
+                                    className="produto-card"
+                                >
+
+                                    {produto.imagem && (
+                                        <img
+                                            src={produto.imagem}
+                                            alt={produto.nome}
+                                        />
+                                    )}
 
 
-                        <button
-                            onClick={() =>
-                                adicionarAoCarrinho(produto)
-                            }
-                        >
-                            Adicionar ao carrinho
-                        </button>
+                                    <h2>{produto.nome}</h2>
 
-                    </div>
 
-                ))}
+                                    <p className="preco">
+                                        R$ {produto.preco.toFixed(2)}
+                                    </p>
 
-            </div>
 
-        </div>
+                                    <button
+                                        onClick={() =>
+                                            adicionarAoCarrinho(produto)
+                                        }
+                                    >
+                                        Adicionar ao carrinho
+                                    </button>
+
+                                </div>
+
+                            ))}
+
+                        </div>
+                    </ div >
+
+
+                }
+
+            />
+
+            < Route path="/pagamento" element={< Pagamento />}
+            />
+
+        </Routes >
+
     )
 }
 
