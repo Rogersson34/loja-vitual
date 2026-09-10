@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function Pagamento() {
 
     const [formaPagamento, setFormaPagamento] = useState('')
 
     const location = useLocation()
+
+    const navigate = useNavigate()
 
     const total = location.state?.total || 0
     function finalizarPagamento(event) {
@@ -17,16 +19,30 @@ function Pagamento() {
             return
         }
 
-        alert(
-            `Pagamento de R$ ${total.toFixed(2)} realizado com ${formaPagamento}!`
-        )
+        const pagamentoAprovado = Math.random() > 0.3
+
+        if (pagamentoAprovado) {
+            navigate('/sucesso', {
+                state: {
+                    total: total,
+                    formaPagamento: formaPagamento
+                }
+            })
+
+        } else {
+            navigate('/falha', {
+                state: {
+                    total: total
+                }
+            })
+        }
     }
 
 
     return (
         <div className="pagina-pagamento">
 
-            <h1>Pagamento</h1>
+            <h1>💳Pagamento</h1>
 
             <p>
                 Total da compra:
@@ -52,7 +68,7 @@ function Pagamento() {
 
                     Pix
                 </label>
-
+                <br />
 
                 <label>
                     <input
@@ -67,7 +83,7 @@ function Pagamento() {
 
                     Cartão de Crédito
                 </label>
-
+                <br />
 
                 <label>
                     <input
@@ -82,7 +98,8 @@ function Pagamento() {
 
                     Boleto
                 </label>
-
+                <br />
+                <br />
 
                 <button type="submit">
                     Finalizar Pagamento
