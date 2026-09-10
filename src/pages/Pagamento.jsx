@@ -1,129 +1,148 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+
 import usePagamento from '../hooks/usePagamento.js'
+import validarCartao from '../utils/pagamento.js'
 
 function Pagamento() {
-
-    const [formaPagamento, setFormaPagamento] = useState('')
-
+    const navigate = useNavigate()
     const location = useLocation()
 
-    const navigate = useNavigate()
-
-    const { processarPagamento,
-        carregando
-    } = usePagamento()
-
+    const { processarPagamento, carregando } = usePagamento()
     const total = location.state?.total || 0
+
+    const [formaPagamento, setFormaPagamento] = useState('')
+    const [erro, setErro] = useState('')
+
+    const [cartao, setCartao] = useState({
+        titular: '',
+        numero: '',
+        validade: '',
+        cvv: ''
+    })
+
+    function preencherCartao(event) {
+        const { name, value } = event.target
+
+        setCartao({
+            ...cartao,
+            [name]: value
+        })
+    }
+
     async function finalizarPagamento(event) {
-
         event.preventDefault()
+        setErro('')
 
-        if (formaPagamento === '') {
-            alert('Escolha uma forma de pagamento.')
+        if (!formaPagamento) {
+            setErro('Escolha uma forma de pagamento.')
             return
         }
 
-        const pagamentoAprovado = await processarPagamento()
+        if (formaPagamento === 'Cartão de Crédito') {
+            const mensagemErro = validarCartao(
+                cartao.titular,
+                cartao.numero,
+                cartao.validade,
+                cartao.cvv
+            )
 
-        if (pagamentoAprovado) {
-            navigate('/sucesso', {
-                state: {
-                    total: total,
-                    formaPagamento: formaPagamento
-                }
-            })
-
-        } else {
-            navigate('/falha', {
-                state: {
-                    total: total
-                }
-            })
+            if (mensagemErro) {
+                setErro(mensagemErro)
+                return
+            }
         }
+
+        const aprovado = await processarPagamento(
+            formaPagamento,
+            cartao.numero
+        )
+
+        navigate(aprovado ? '/sucesso' : '/falha')
     }
 
+    const formasPagamento = [
+        'Pix',
+        'Cartão de Crédito',
+        'Boleto'
+    ]
 
     return (
         <div className="pagina-pagamento">
-
-            <h1>💳Pagamento</h1>
+            <h1>💳 Pagamento</h1>
 
             <p>
                 Total da compra:
                 <strong> R$ {total.toFixed(2)}</strong>
             </p>
 
-
             <form onSubmit={finalizarPagamento}>
-
                 <h2>Escolha a forma de pagamento</h2>
 
+                {formasPagamento.map((forma) => (
+                    <label key={forma}>
+                        <input
+                            type="radio"
+                            value={forma}
+                            checked={formaPagamento === forma}
+                            onChange={(event) =>
+                                setFormaPagamento(event.target.value)
+                            }
+                        />
 
-                <label>
-                    <input
-                        type="radio"
-                        name="pagamento"
-                        value="Pix"
-                        checked={formaPagamento === 'Pix'}
-                        onChange={(event) =>
-                            setFormaPagamento(event.target.value)
-                        }
-                    />
+                        {forma}
+                    </label>
+                ))}
 
-                    Pix
-                </label>
-                <br />
+                {formaPagamento === 'Cartão de Crédito' && (
+                    <div className="dados-cartao">
+                        <h2>Dados do cartão</h2>
 
-                <label>
-                    <input
-                        type="radio"
-                        name="pagamento"
-                        value="Cartão de Crédito"
-                        checked={formaPagamento === 'Cartão de Crédito'}
-                        onChange={(event) =>
-                            setFormaPagamento(event.target.value)
-                        }
-                    />
+                        <input
+                            name="titular"
+                            placeholder="Nome do titular"
+                            value={cartao.titular}
+                            onChange={preencherCartao}
+                        />
 
-                    Cartão de Crédito
-                </label>
-                <br />
+                        <input
+                            name="numero"
+                            placeholder="1234 5678 1234 5678"
+                            value={cartao.numero}
+                            onChange={preencherCartao}
+                        />
 
-                <label>
-                    <input
-                        type="radio"
-                        name="pagamento"
-                        value="Boleto"
-                        checked={formaPagamento === 'Boleto'}
-                        onChange={(event) =>
-                            setFormaPagamento(event.target.value)
-                        }
-                    />
+                        <input
+                            name="validade"
+                            placeholder="MM/AA"
+                            value={cartao.validade}
+                            onChange={preencherCartao}
+                        />
 
-                    Boleto
-                </label>
-                <br />
-                <br />
+                        <input
+                            name="cvv"
+                            placeholder="CVV"
+                            value={cartao.cvv}
+                            onChange={preencherCartao}
+                        />
+                    </div>
+                )}
 
-                <button
-                    type="submit"
-                    disabled={carregando}
-                >
+                {erro && (
+                    <p className="mensagem-erro">
+                        {erro}
+                    </p>
+                )}
+
+                <button type="submit" disabled={carregando}>
                     {carregando
-                        ? 'Processando pagamento...'
-                        : 'Finalizar Pagamento'
-
+                        ? 'Processando compra…'
+                        : 'Finalizar pagamento'
                     }
-
                 </button>
-
             </form>
-
         </div>
-
     )
 }
 
-export default Pagamento
-
+export default Pagamento;
