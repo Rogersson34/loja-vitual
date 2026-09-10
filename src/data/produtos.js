@@ -1,66 +1,55 @@
 const produtos = [
     {
-        id: 1,
-        nome: "Bicicleta",
-        precoUnitario: 900.00,
-        quantidade: 2
+        "id": 1,
+        "nome": "Bicicleta",
+        "imagem": "./assets/bicicleta.jpg",
+        "preco": 900.00
     },
     {
-        id: 2,
-        nome: "Celular",
-        precoUnitario: 1400.00,
-        quantidade: 5
+        "id": 2,
+        "nome": "Celular",
+        "imagem": "./assets/celular.jpg",
+        "preco": 1700.00
     },
     {
-        id: 3,
-        nome: "Ferramentas",
-        precoUnitario: 149.90,
-        quantidade: 3
+        "id": 3,
+        "nome": "Ferramentas",
+        "imagem": "./assets/ferramentas.jpg",
+        "preco": 140.00
     },
     {
-        id: 4,
-        nome: "Impressora",
-        precoUnitario: 799.00,
-        quantidade: 2
+        "id": 4,
+        "nome": "Impressora",
+        "imagem": "./assets/impressora.jpg",
+        "preco": 799.00
     },
     {
-        id: 5,
-        nome: "Liquidificador",
-        precoUnitario: 89.90,
-        quantidade: 4
+        "id": 5,
+        "nome": "Liquidificador",
+        "imagem": "./assets/liquidificador.jpg",
+        "preco": 99.90
     },
     {
-        id: 6,
-        nome: "Notebook",
-        precoUnitario: 1999.00,
-        quantidade: 2
+        "id": 6,
+        "nome": "Notebook",
+        "imagem": "./assets/notebook.jpg",
+        "preco": 1999.90
     },
     {
-        id: 7,
-        nome: "Panelas",
-        precoUnitario: 264.90,
-        quantidade: 5
+        "id": 7,
+        "nome": "Panelas",
+        "imagem": "./assets/panelas.jpg",
+        "preco": 229.90
     },
     {
-        id: 8,
-        nome: "Pneu",
-        precoUnitario: 399.00,
-        quantidade: 4
-    },
-    {
-        id: 9,
-        nome: "TV",
-        precoUnitario: 1699.00,
-        quantidade: 2
-    },
-    {
-        id: 10,
-        nome: "Video Game",
-        precoUnitario: 2999.00,
-        quantidade: 1
+        "id": 8,
+        "nome": "Pneu",
+        "imagem": "./assets/pneu.jpg",
+        "preco": 279.90
     }
 
 ];
 
+export default produtos;
 
-console.log(produtos);
+console.log("Produtos carregados com sucesso...!");
