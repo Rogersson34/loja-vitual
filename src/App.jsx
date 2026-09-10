@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Carrinho from './pages/Carrinho.jsx'
 import Pagamento from './pages/Pagamento.jsx'
+import Sucesso from './pages/Sucesso.jsx'
 import produtosIniciais from './data/produtos.js'
 import './App.css'
 
@@ -160,6 +161,8 @@ function App() {
 
             < Route path="/pagamento" element={< Pagamento />}
             />
+
+            <Route path="/sucesso" element={<Sucesso />} />
 
         </Routes >
 
