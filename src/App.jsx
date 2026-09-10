@@ -1,9 +1,9 @@
-
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Carrinho from './pages/Carrinho.jsx'
 import Pagamento from './pages/Pagamento.jsx'
 import Sucesso from './pages/Sucesso.jsx'
+import Falha from './pages/Falha.jsx'
 import produtosIniciais from './data/produtos.js'
 import './App.css'
 
@@ -163,6 +163,8 @@ function App() {
             />
 
             <Route path="/sucesso" element={<Sucesso />} />
+
+            <Route path="/falha" element={<Falha />} />
 
         </Routes >
 
