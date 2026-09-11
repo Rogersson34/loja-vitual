@@ -6,14 +6,13 @@ import validarCartao from '../utils/pagamento.js'
 
 function Pagamento() {
     const navigate = useNavigate()
-    const location = useLocation()
-
+    const { state } = useLocation()
     const { processarPagamento, carregando } = usePagamento()
-    const total = location.state?.total || 0
+
+    const total = state?.total || 0
 
     const [formaPagamento, setFormaPagamento] = useState('')
     const [erro, setErro] = useState('')
-
     const [cartao, setCartao] = useState({
         titular: '',
         numero: '',
@@ -23,11 +22,7 @@ function Pagamento() {
 
     function preencherCartao(event) {
         const { name, value } = event.target
-
-        setCartao({
-            ...cartao,
-            [name]: value
-        })
+        setCartao({ ...cartao, [name]: value })
     }
 
     async function finalizarPagamento(event) {
@@ -40,15 +35,15 @@ function Pagamento() {
         }
 
         if (formaPagamento === 'Cartão de Crédito') {
-            const mensagemErro = validarCartao(
+            const erroCartao = validarCartao(
                 cartao.titular,
                 cartao.numero,
                 cartao.validade,
                 cartao.cvv
             )
 
-            if (mensagemErro) {
-                setErro(mensagemErro)
+            if (erroCartao) {
+                setErro(erroCartao)
                 return
             }
         }
@@ -58,14 +53,14 @@ function Pagamento() {
             cartao.numero
         )
 
-        navigate(aprovado ? '/sucesso' : '/falha')
+        aprovado
+            ? navigate('/sucesso', {
+                state: { total, formaPagamento }
+            })
+            : navigate('/falha')
     }
 
-    const formasPagamento = [
-        'Pix',
-        'Cartão de Crédito',
-        'Boleto'
-    ]
+    const formas = ['Pix', 'Cartão de Crédito', 'Boleto']
 
     return (
         <div className="pagina-pagamento">
@@ -79,17 +74,17 @@ function Pagamento() {
             <form onSubmit={finalizarPagamento}>
                 <h2>Escolha a forma de pagamento</h2>
 
-                {formasPagamento.map((forma) => (
+                {formas.map((forma) => (
                     <label key={forma}>
                         <input
                             type="radio"
+                            name="pagamento"
                             value={forma}
                             checked={formaPagamento === forma}
                             onChange={(event) =>
                                 setFormaPagamento(event.target.value)
                             }
                         />
-
                         {forma}
                     </label>
                 ))}
@@ -98,51 +93,34 @@ function Pagamento() {
                     <div className="dados-cartao">
                         <h2>Dados do cartão</h2>
 
-                        <input
-                            name="titular"
-                            placeholder="Nome do titular"
-                            value={cartao.titular}
-                            onChange={preencherCartao}
-                        />
-
-                        <input
-                            name="numero"
-                            placeholder="1234 5678 1234 5678"
-                            value={cartao.numero}
-                            onChange={preencherCartao}
-                        />
-
-                        <input
-                            name="validade"
-                            placeholder="MM/AA"
-                            value={cartao.validade}
-                            onChange={preencherCartao}
-                        />
-
-                        <input
-                            name="cvv"
-                            placeholder="CVV"
-                            value={cartao.cvv}
-                            onChange={preencherCartao}
-                        />
+                        {[
+                            ['titular', 'Nome do titular'],
+                            ['numero', '1234 5678 1234 5678'],
+                            ['validade', 'MM/AA'],
+                            ['cvv', 'CVV']
+                        ].map(([name, placeholder]) => (
+                            <input
+                                key={name}
+                                name={name}
+                                placeholder={placeholder}
+                                value={cartao[name]}
+                                onChange={preencherCartao}
+                            />
+                        ))}
                     </div>
                 )}
 
-                {erro && (
-                    <p className="mensagem-erro">
-                        {erro}
-                    </p>
-                )}
+                {erro && <p className="mensagem-erro">{erro}</p>}
 
                 <button type="submit" disabled={carregando}>
                     {carregando
                         ? 'Processando compra…'
-                        : 'Finalizar pagamento'
-                    }
+                        : 'Finalizar pagamento'}
                 </button>
             </form>
         </div>
     )
 }
 
-export default Pagamento;
+export default Pagamento
+

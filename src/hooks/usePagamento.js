@@ -1,28 +1,46 @@
 import { useState } from 'react'
 
 function usePagamento() {
+
     const [carregando, setCarregando] = useState(false)
 
-    const [erro, setErro] = useState(null)
-    async function processarPagamento() {
+
+    async function processarPagamento(
+        formaPagamento,
+        numeroCartao
+    ) {
+
         setCarregando(true)
 
-        setErro(null)
+        await new Promise((resolve) => {
+            setTimeout(resolve, 2000)
+        })
 
-        await new Promise((resolve) => { setTimeout(resolve, 2000) })
+        if (formaPagamento !== 'Cartão de Crédito') {
 
-        const pagamentoAprovado = Math.random() > 0.3
+            setCarregando(false)
+
+            return true
+        }
+
+        const numeroLimpo =
+            numeroCartao.replace(/[\s-]/g, '')
+
+        const todosIguais = numeroLimpo
+            .split('')
+            .every(
+                digito => digito === numeroLimpo[0]
+            )
 
         setCarregando(false)
 
-        return pagamentoAprovado
+        return !todosIguais
     }
 
 
     return {
         processarPagamento,
-        carregando,
-        erro
+        carregando
     }
 }
 
