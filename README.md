@@ -1,16 +1,48 @@
-# React + Vite
+# Loja Virtual
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esse projeto consite em criar uma Loja Virtual, com aplicação React e Java Script, que simula um site de compras (E-commerce), nele temos nossos produtos com fotos e valores e o botão de adicionar ao carrinho, onde nos leva ao Resumo da Compra, listando nossos produtos, com os valores e a quantidade, podendo aumentar diminuir ou excluir. 
+Ao finalizar a compra nossa página nos leva para a forma de pagamento, entre elas temos a opção de PIX, BOLETO e CARTÃO DE CRÉDITO, onde validamos as informações e nosso sistema identifica a forma de pagamento, podendo ser APROVADA ou RECUSADA!
 
-Currently, two official plugins are available:
+Abaixo temos a nossa estrutura do projeto;
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+├── package.json — dependências e scripts do Vite 
+├── vite.config.js — configuração do Vite 
+├── README.md — documentação e instruções de execução 
+├── src/
+├── main.jsx — ponto de entrada da aplicação 
+├── App.jsx — configuração das quatro rotas 
+├── pages/
+│
+├── Carrinho.jsx — produtos, subtotais e total da compra 
+│
+├── Pagamento.jsx — formulário com React Hook Form e Zod 
+│
+├── Sucesso.jsx — confirmação da compra 
+│
+└── Falha.jsx — mensagem "tentativa de golpe" 
+├── components/
+│
+├── ItemCarrinho.jsx — exibição de um produto via props 
+│
+└── ResumoCompra.jsx — resumo dos valores da compra 
+├── hooks/
+│
+└── usePagamento.js — estado e processamento da compra simulada 
+├── utils/
+│
+└── pagamento.js — regra que identifica dígitos todos iguais 
+├── data/
+│
+└── produtos.js — array fixo de produtos 
+└── assets/
+├── styles/
+│
+└── index.css — estilos e responsividade 
+└── img/
+└── logo.svg — identidade visual da loja
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+Link do video: https://docs.google.com/videos/d/1wZe1DIbnC2ZtJWB-a0tVEBl1jOc1napYE4JIs39NxkE/edit?scene=id.g70e19073_0_0#scene=id.g70e19073_0_0
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Link do GitHub: https://github.com/Rogersson34/loja-vitual
