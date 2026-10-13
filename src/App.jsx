@@ -1,122 +1,175 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { Routes, Route } from 'react-router-dom'
+import Carrinho from './pages/Carrinho.jsx'
+import Pagamento from './pages/Pagamento.jsx'
+import Sucesso from './pages/Sucesso.jsx'
+import Falha from './pages/Falha.jsx'
+import produtosIniciais from './data/produtos.js'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [listaProdutos] = useState(produtosIniciais)
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    const [carrinho, setCarrinho] = useState([])
 
-      <div className="ticks"></div>
+    function adicionarAoCarrinho(produto) {
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        const produtoJaExiste = carrinho.find(
+            item => item.id === produto.id
+        )
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        if (produtoJaExiste) {
+
+            const novoCarrinho = carrinho.map(item => {
+
+                if (item.id === produto.id) {
+
+                    return {
+                        ...item,
+                        quantidade: item.quantidade + 1
+                    }
+
+                }
+
+                return item
+
+            })
+
+            setCarrinho(novoCarrinho)
+
+        } else {
+
+            const novoProduto = {
+                ...produto,
+                quantidade: 1
+            }
+
+            setCarrinho([...carrinho, novoProduto])
+        }
+
+        alert(`Produto ${produto.nome} adicionado ao carrinho!`)
+    }
+
+    function atualizarQuantidade(id, novaQuantidade) {
+
+        if (novaQuantidade <= 0) {
+            removerDoCarrinho(id)
+            return
+        }
+
+
+        const novoCarrinho = carrinho.map(item => {
+
+            if (item.id === id) {
+
+                return {
+                    ...item,
+                    quantidade: novaQuantidade
+                }
+
+            }
+
+            return item
+
+        })
+
+        setCarrinho(novoCarrinho)
+    }
+
+    function removerDoCarrinho(id) {
+
+        const novoCarrinho = carrinho.filter(
+            item => item.id !== id
+        )
+
+        setCarrinho(novoCarrinho)
+    }
+
+    const quantidadeTotal = carrinho.reduce(
+        (total, item) => total + item.quantidade,
+        0
+    )
+
+
+    return (
+
+        <Routes>
+
+            <Route
+                path="/"
+                element={
+
+                    < div className="container" >
+
+                        <h1>Loja Virtual</h1>
+
+                        <p>
+                            Itens no carrinho: <strong>{quantidadeTotal}</strong>
+                        </p>
+
+                        <Carrinho
+                            itens={carrinho}
+                            onRemover={removerDoCarrinho}
+                            onAtualizarQuantidade={atualizarQuantidade}
+                        />
+
+
+                        <div className="produtos-grid">
+
+                            {listaProdutos.map((produto) => (
+
+                                <div
+                                    key={produto.id}
+                                    className="produto-card"
+                                >
+
+                                    {produto.imagem && (
+                                        <img
+                                            src={produto.imagem}
+                                            alt={produto.nome}
+                                        />
+                                    )}
+
+
+                                    <h2>{produto.nome}</h2>
+
+
+                                    <p className="preco">
+                                        R$ {produto.preco.toFixed(2)}
+                                    </p>
+
+
+                                    <button
+                                        onClick={() =>
+                                            adicionarAoCarrinho(produto)
+                                        }
+                                    >
+                                        Adicionar ao carrinho
+                                    </button>
+
+                                </div>
+
+                            ))}
+
+                        </div>
+                    </ div >
+
+
+                }
+
+            />
+
+            < Route path="/pagamento" element={< Pagamento />}
+            />
+
+            <Route path="/sucesso" element={<Sucesso />} />
+
+            <Route path="/falha" element={<Falha />} />
+
+        </Routes >
+
+    )
 }
 
 export default App
+
